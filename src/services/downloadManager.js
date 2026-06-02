@@ -1,11 +1,16 @@
 import { saveAudioToDB, deleteAudioFromDB } from './indexedDB';
 
-const AUDIO_BASE_SURAH = 'https://cdn.islamic.network/quran/audio-surah/128';
-const AUDIO_BASE_AYAH = 'https://cdn.islamic.network/quran/audio/128';
+const AUDIO_BASE_SURAH = 'https://khorasan.mamluk.net/public.php/dav/files/Y7cWxynjJ7EaP8t/audio-surah/128';
+
+const CORS_PROXIES = [
+  'https://corsproxy.io/?',
+  'https://api.allorigins.win/raw?url=',
+  'https://corsproxy.deno.dev/',
+];
 
 const createDownloadTask = (surahNumber, reciter = 'ar.alafasy') => {
   const url = `${AUDIO_BASE_SURAH}/${reciter}/${surahNumber}.mp3`;
-  return { surah: surahNumber, url, fallbackUrl: `${AUDIO_BASE_AYAH}/${reciter}/${surahNumber}.mp3`, status: 'pending', progress: 0, loaded: 0, total: 0, controller: null, reciter };
+  return { surah: surahNumber, url, status: 'pending', progress: 0, loaded: 0, total: 0, controller: null, reciter };
 };
 
 class QuranDownloadManager {
@@ -69,7 +74,7 @@ class QuranDownloadManager {
       await this.processResponse(response, task, surahNumber);
     } catch (err) {
       if (err.name !== 'AbortError') {
-        await this.tryFallback(task, surahNumber);
+        await this.tryViaProxies(task, surahNumber, 0);
       } else {
         this.handleError(task, surahNumber, err);
       }
@@ -78,20 +83,32 @@ class QuranDownloadManager {
     if (this.activeCount < 0) this.activeCount = 0;
   }
 
-  async tryFallback(task, surahNumber) {
+  async tryViaProxies(task, surahNumber, proxyIndex) {
+    if (proxyIndex >= CORS_PROXIES.length) {
+      this.activeCount--;
+      task.status = 'error-cors';
+      this.notify(surahNumber, { status: 'error-cors', progress: 0, error: 'تعذر التحميل من جميع المصادر. تحقق من اتصالك بالإنترنت.' });
+      return;
+    }
+
     try {
       task.controller = new AbortController();
-      this.notify(surahNumber, { status: 'downloading', progress: 0, loaded: 0, total: 0, fallback: true });
+      this.notify(surahNumber, { status: 'downloading', progress: 0, loaded: 0, total: 0, viaProxy: true });
 
-      const response = await fetch(task.fallbackUrl, {
+      const proxyUrl = `${CORS_PROXIES[proxyIndex]}${encodeURIComponent(task.url)}`;
+      const response = await fetch(proxyUrl, {
         signal: task.controller.signal,
       });
 
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) throw new Error(`Proxy HTTP ${response.status}`);
 
       await this.processResponse(response, task, surahNumber);
     } catch (err) {
-      this.handleError(task, surahNumber, err);
+      if (err.name === 'AbortError') {
+        this.handleError(task, surahNumber, err);
+        return;
+      }
+      await this.tryViaProxies(task, surahNumber, proxyIndex + 1);
     }
   }
 

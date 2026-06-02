@@ -17,8 +17,8 @@ export const fetchSurahById = async (id) => {
   return response.data.data;
 };
 
-const AUDIO_BASE = 'https://cdn.islamic.network/quran/audio-surah/128';
-
+//const AUDIO_BASE = 'https://cdn.islamic.network/quran/audio-surah/128';
+const AUDIO_BASE = 'https://khorasan.mamluk.net/public.php/dav/files/Y7cWxynjJ7EaP8t/audio-surah/128';
 export const fetchSurahAudio = async (id) => {
   const response = await api.get(`/surah/${id}/ar.alafasy`);
   return response.data.data;

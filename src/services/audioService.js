@@ -1,4 +1,4 @@
-const AUDIO_BASE = 'https://cdn.islamic.network/quran/audio-surah/128';
+const AUDIO_BASE = 'https://khorasan.mamluk.net/public.php/dav/files/Y7cWxynjJ7EaP8t/audio-surah/128';
 
 let currentAudio = null;
 let onEndedCallback = null;
