@@ -17,7 +17,6 @@ const SurahDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copyFeedback, setCopyFeedback] = useState('');
-  const [playingAyahIndex, setPlayingAyahIndex] = useState(-1);
   const surahList = JSON.parse(localStorage.getItem('quran_surahs_cache') || '[]');
   const scrollRef = useRef(null);
 
@@ -29,14 +28,6 @@ const SurahDetails = () => {
   const prevSurah = hasPrev ? surahList[currentIdx - 1] : null;
 
   const isPlayingThisSurah = audio.currentSurah?.number === surahNumber && audio.isPlaying && audio.playbackMode === 'surah';
-
-  useEffect(() => {
-    if (audio.currentSurah?.number === surahNumber && audio.isPlaying && audio.playbackMode === 'verse') {
-      setPlayingAyahIndex(audio.currentAyahIndex);
-    } else {
-      setPlayingAyahIndex(-1);
-    }
-  }, [audio.currentSurah?.number, audio.currentAyahIndex, audio.isPlaying, audio.playbackMode, surahNumber]);
 
   useEffect(() => {
     audio.setPlaybackMode('surah');
@@ -127,15 +118,6 @@ const SurahDetails = () => {
     }
   }, [isPlayingThisSurah, audio, surahNumber]);
 
-  const handlePlayAyah = useCallback((surahNum, ayahIndex) => {
-    if (audio.currentSurah?.number === surahNum && audio.currentAyahIndex === ayahIndex && audio.isPlaying) {
-      audio.togglePlay();
-    } else {
-      audio.setPlaybackMode('verse');
-      audio.playSurah(surahNum, ayahIndex);
-    }
-  }, [audio]);
-
   if (loading) return <LoadingSpinner text="جاري تحميل السورة..." />;
 
   if (error) {
@@ -207,8 +189,6 @@ const SurahDetails = () => {
                 ayahFont={settings.font}
                 fontSizeClass={settings.fontSize}
                 onCopy={handleCopy}
-                onPlay={handlePlayAyah}
-                isPlaying={playingAyahIndex === ayah.numberInSurah - 1}
               />
             </div>
           </div>
