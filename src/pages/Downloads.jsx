@@ -3,7 +3,7 @@ import { FaDownload, FaCheck, FaSpinner } from 'react-icons/fa';
 import { useQuran } from '../context/QuranContext';
 import DownloadButton from '../components/DownloadButton';
 import DownloadManager from '../components/DownloadManager';
-import { getStorageInfo } from '../services/indexedDB';
+import { quranDownloadManager } from '../services/downloadManager';
 
 const Downloads = () => {
   const { surahs, loadSurahs } = useQuran();
@@ -15,7 +15,7 @@ const Downloads = () => {
     if (surahs.length === 0) {
       loadSurahs().catch(() => {});
     }
-    getStorageInfo().then((info) => {
+    quranDownloadManager.getStorageInfo().then((info) => {
       setStorageInfo(info);
       setLoading(false);
     }).catch(() => setLoading(false));

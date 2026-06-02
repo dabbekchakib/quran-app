@@ -15,7 +15,6 @@ export const playSurah = (surahNumber, reciter = 'ar.alafasy') => {
   const url = getSurahUrl(surahNumber, reciter);
   const audio = new Audio(url);
   audio.preload = 'auto';
-  audio.crossOrigin = 'anonymous';
 
   audio.addEventListener('loadedmetadata', () => {
     onLoadCallback?.({ duration: audio.duration });

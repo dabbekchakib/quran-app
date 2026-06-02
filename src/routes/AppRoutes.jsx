@@ -7,7 +7,9 @@ const Home = lazy(() => import('../pages/Home'));
 const SurahDetails = lazy(() => import('../pages/SurahDetails'));
 const Search = lazy(() => import('../pages/Search'));
 const JuzList = lazy(() => import('../pages/JuzList'));
+const JuzDetail = lazy(() => import('../pages/JuzDetail'));
 const HizbList = lazy(() => import('../pages/HizbList'));
+const HizbDetail = lazy(() => import('../pages/HizbDetail'));
 const Bookmarks = lazy(() => import('../pages/Bookmarks'));
 const Downloads = lazy(() => import('../pages/Downloads'));
 const Settings = lazy(() => import('../pages/Settings'));
@@ -22,7 +24,9 @@ const AppRoutes = () => {
           <Route path="/surah/:id" element={<SurahDetails />} />
           <Route path="/search" element={<Search />} />
           <Route path="/juz" element={<JuzList />} />
+          <Route path="/juz/:id" element={<JuzDetail />} />
           <Route path="/hizb" element={<HizbList />} />
+          <Route path="/hizb/:id" element={<HizbDetail />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/settings" element={<Settings />} />

@@ -1,15 +1,16 @@
 import { useState, useEffect, memo } from 'react';
-import { FaTrash, FaDownload, FaCheck, FaSpinner } from 'react-icons/fa';
-import { getAllDownloadedSurahs } from '../services/indexedDB';
+import { FaTrash, FaDownload, FaPlay, FaPause, FaSpinner } from 'react-icons/fa';
 import { quranDownloadManager } from '../services/downloadManager';
+import { useAudio } from '../context/AudioContext';
 
 const DownloadManager = memo(({ surahList }) => {
+  const audio = useAudio();
   const [downloaded, setDownloaded] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const refresh = () => {
     setLoading(true);
-    getAllDownloadedSurahs().then((items) => {
+    quranDownloadManager.getAllDownloaded().then((items) => {
       setDownloaded(items);
       setLoading(false);
     }).catch(() => setLoading(false));
@@ -28,10 +29,19 @@ const DownloadManager = memo(({ surahList }) => {
   };
 
   const handleDeleteAll = async () => {
-    for (const item of downloaded) {
-      await quranDownloadManager.deleteDownload(item.surah);
+    for (const sn of downloaded) {
+      await quranDownloadManager.deleteDownload(sn);
     }
     refresh();
+  };
+
+  const handlePlay = (surahNumber) => {
+    if (audio.currentSurah?.number === surahNumber && audio.isPlaying) {
+      audio.togglePlay();
+    } else {
+      audio.setPlaybackMode('surah');
+      audio.playSurah(surahNumber);
+    }
   };
 
   if (loading) {
@@ -51,14 +61,11 @@ const DownloadManager = memo(({ surahList }) => {
     );
   }
 
-  const totalSize = downloaded.reduce((sum, item) => sum + (item.size || 0), 0);
-
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <p className="text-xs text-slate-400">
           {downloaded.length} سورة
-          {totalSize > 0 && ` (${(totalSize / 1024 / 1024).toFixed(1)} MB)`}
         </p>
         <button
           onClick={handleDeleteAll}
@@ -70,31 +77,43 @@ const DownloadManager = memo(({ surahList }) => {
       </div>
 
       <div className="space-y-2">
-        {downloaded.map((item) => {
-          const surah = surahList?.find((s) => s.number === item.surah);
+        {downloaded.map((surahNumber) => {
+          const surah = surahList?.find((s) => s.number === surahNumber);
+          const isPlayingThis = audio.currentSurah?.number === surahNumber && audio.isPlaying;
           return (
             <div
-              key={item.surah}
+              key={surahNumber}
               className="flex items-center justify-between bg-slate-800/40 border border-teal-500/10 rounded-xl px-4 py-3"
             >
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <FaCheck className="text-emerald-400 text-xs" />
+                  <FaDownload className="text-emerald-400 text-xs" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-200 font-[Amiri]">{surah?.name || `سورة ${item.surah}`}</p>
-                  <p className="text-[10px] text-slate-500">
-                    {item.timestamp ? new Date(item.timestamp).toLocaleDateString('ar-SA') : ''}
-                  </p>
+                  <p className="text-sm text-slate-200 font-[Amiri]">{surah?.name || `سورة ${surahNumber}`}</p>
                 </div>
               </div>
-              <button
-                onClick={() => handleDelete(item.surah)}
-                className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                aria-label={`حذف سورة ${item.surah}`}
-              >
-                <FaTrash size={12} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handlePlay(surahNumber)}
+                  className={`p-2 rounded-lg transition-all ${
+                    isPlayingThis
+                      ? 'text-teal-300 bg-teal-500/15'
+                      : 'text-slate-400 hover:text-teal-300 hover:bg-slate-700/50'
+                  }`}
+                  aria-label={isPlayingThis ? 'إيقاف التشغيل' : 'تشغيل السورة'}
+                  title={isPlayingThis ? 'إيقاف' : 'تشغيل'}
+                >
+                  {isPlayingThis ? <FaPause size={13} /> : <FaPlay size={12} />}
+                </button>
+                <button
+                  onClick={() => handleDelete(surahNumber)}
+                  className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                  aria-label={`حذف سورة ${surahNumber}`}
+                >
+                  <FaTrash size={12} />
+                </button>
+              </div>
             </div>
           );
         })}

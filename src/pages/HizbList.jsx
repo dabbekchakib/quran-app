@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LuBookMarked } from 'react-icons/lu';
 import { HIZB_COUNT } from '../utils/constants';
-import { getSurahNumberFromHizb } from '../utils/helpers';
 
 const HizbList = () => {
   useEffect(() => {
@@ -27,7 +26,7 @@ const HizbList = () => {
         {Array.from({ length: HIZB_COUNT }, (_, i) => i + 1).map((hizbNumber) => (
           <Link
             key={hizbNumber}
-            to={`/surah/${getSurahNumberFromHizb(hizbNumber)}`}
+            to={`/hizb/${hizbNumber}`}
             className="group block bg-slate-800/40 backdrop-blur-sm border border-teal-500/10 rounded-xl p-4 text-center hover:bg-slate-800/70 hover:border-teal-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5"
           >
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500/15 to-emerald-500/15 border border-teal-500/20 flex flex-col items-center justify-center mx-auto mb-2">

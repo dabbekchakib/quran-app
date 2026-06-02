@@ -1,4 +1,5 @@
-import { FaQuran, FaHeart } from 'react-icons/fa';
+import { FaHeart } from 'react-icons/fa';
+import quranLogo from '../assets/quranLogo.png';
 
 const Footer = () => {
   return (
@@ -9,7 +10,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-2 text-teal-400">
-            <FaQuran className="text-2xl" />
+            <img src={quranLogo} alt="القرآن الكريم" className="w-7 h-7" />
             <span className="font-[Amiri] text-lg font-bold">القرآن الكريم</span>
           </div>
           <p className="text-slate-400 text-sm text-center">

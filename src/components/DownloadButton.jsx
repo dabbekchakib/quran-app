@@ -1,26 +1,23 @@
 import { useState, useEffect, memo, useCallback, useRef } from 'react';
-import { FaDownload, FaPause, FaPlay, FaCheck, FaExclamationTriangle } from 'react-icons/fa';
+import { FaDownload, FaSpinner, FaCheck, FaPlay, FaPause, FaExclamationTriangle } from 'react-icons/fa';
 import { quranDownloadManager } from '../services/downloadManager';
-import { getAudioStatus } from '../services/indexedDB';
-
-const CORS_TOOLTIP = 'التحميل المباشر غير مدعوم من CDN. استخدم الخاصية "حفظ كـ" في المتصفح.';
+import { useAudio } from '../context/AudioContext';
 
 const DownloadButton = memo(({ surahNumber, onStatusChange }) => {
+  const audio = useAudio();
   const [status, setStatus] = useState('none');
-  const [progress, setProgress] = useState(0);
   const [errorMsg, setErrorMsg] = useState('');
   const timerRef = useRef(null);
 
   useEffect(() => {
-    getAudioStatus(surahNumber).then(setStatus).catch(() => {});
+    quranDownloadManager.getStatus(surahNumber).then((s) => setStatus(s.status));
   }, [surahNumber]);
 
   useEffect(() => {
     const unsub = quranDownloadManager.on(surahNumber, (data) => {
       setStatus(data.status);
-      setProgress(data.progress || 0);
-      if (data.status === 'error-cors') {
-        setErrorMsg(data.error || CORS_TOOLTIP);
+      if (data.status === 'error') {
+        setErrorMsg(data.error || 'فشل التحميل');
         clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => setErrorMsg(''), 4000);
       }
@@ -30,31 +27,45 @@ const DownloadButton = memo(({ surahNumber, onStatusChange }) => {
   }, [surahNumber, onStatusChange]);
 
   const handleClick = useCallback(() => {
-    if (status === 'downloading') {
-      quranDownloadManager.pauseDownload(surahNumber);
-    } else if (status === 'paused') {
-      quranDownloadManager.resumeDownload(surahNumber);
-    } else if (status === 'completed' || status === 'downloaded') {
+    if (status === 'downloading') return;
+    if (status === 'completed') {
       quranDownloadManager.deleteDownload(surahNumber).then(() => {
         setStatus('none');
-        setProgress(0);
         onStatusChange?.(surahNumber, 'none');
       });
     } else {
       setStatus('downloading');
-      setProgress(0);
       quranDownloadManager.startDownload(surahNumber);
     }
   }, [status, surahNumber, onStatusChange]);
 
-  if (status === 'completed' || status === 'downloaded') {
+  const handlePlay = useCallback((e) => {
+    e.stopPropagation();
+    if (audio.currentSurah?.number === surahNumber && audio.isPlaying) {
+      audio.togglePlay();
+    } else {
+      audio.setPlaybackMode('surah');
+      audio.playSurah(surahNumber);
+    }
+  }, [audio, surahNumber]);
+
+  const isPlayingThis = audio.currentSurah?.number === surahNumber && audio.isPlaying;
+
+  if (status === 'completed') {
     return (
-      <div className="relative">
-        {errorMsg && (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-red-900/90 text-red-200 text-[10px] px-3 py-1.5 rounded-lg whitespace-nowrap shadow-xl z-50 border border-red-500/30">
-            {errorMsg}
-          </div>
-        )}
+      <div className="flex items-center gap-1">
+        <button
+          onClick={handlePlay}
+          className={`p-2 rounded-lg transition-all ${
+            isPlayingThis
+              ? 'text-teal-300 bg-teal-500/15'
+              : 'text-emerald-400 hover:text-teal-300 hover:bg-slate-700/50'
+          }`}
+          aria-label={isPlayingThis ? 'إيقاف التشغيل' : 'تشغيل السورة'}
+          title={isPlayingThis ? 'إيقاف' : 'تشغيل'}
+        >
+          {isPlayingThis ? <FaPause size={13} /> : <FaPlay size={12} />}
+        </button>
         <button
           onClick={handleClick}
           className="p-2 rounded-lg text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all"
@@ -69,34 +80,11 @@ const DownloadButton = memo(({ surahNumber, onStatusChange }) => {
 
   if (status === 'downloading') {
     return (
-      <div className="flex items-center gap-1">
-        <span className="text-[10px] text-teal-400 min-w-[28px] text-left" dir="ltr">{progress}%</span>
-        <button
-          onClick={handleClick}
-          className="p-2 rounded-lg text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-all"
-          aria-label={`إيقاف تحميل سورة ${surahNumber}`}
-          title="إيقاف التحميل"
-        >
-          <FaPause size={12} />
-        </button>
-      </div>
+      <FaSpinner className="animate-spin text-teal-400" size={14} />
     );
   }
 
-  if (status === 'paused') {
-    return (
-      <button
-        onClick={handleClick}
-        className="p-2 rounded-lg text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 transition-all"
-        aria-label={`استئناف تحميل سورة ${surahNumber}`}
-        title="متصلاً - اضغط للاستئناف"
-      >
-        <FaPlay size={12} />
-      </button>
-    );
-  }
-
-  if (status === 'error' || status === 'error-cors') {
+  if (status === 'error') {
     return (
       <div className="relative">
         {errorMsg && (
@@ -108,7 +96,7 @@ const DownloadButton = memo(({ surahNumber, onStatusChange }) => {
           onClick={handleClick}
           className="p-2 rounded-lg text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-all"
           aria-label={`إعادة محاولة تحميل سورة ${surahNumber}`}
-          title={CORS_TOOLTIP}
+          title="فشل التحميل - اضغط لإعادة المحاولة"
         >
           <FaExclamationTriangle size={12} />
         </button>

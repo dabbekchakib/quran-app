@@ -62,3 +62,15 @@ export const searchQuran = async (query, language = 'ar') => {
   const response = await api.get(`/search/${encodeURIComponent(query)}/all/${language}`);
   return response.data.data;
 };
+
+export const fetchFullHizb = async (hizbNumber, edition = 'quran-uthmani') => {
+  const start = (hizbNumber - 1) * 4 + 1;
+  const quarterNumbers = [start, start + 1, start + 2, start + 3];
+  const responses = await Promise.all(
+    quarterNumbers.map((quarter) =>
+      api.get(`/hizbQuarter/${quarter}/${edition}`)
+    )
+  );
+  const ayahs = responses.flatMap((res) => res.data.data.ayahs);
+  return { hizbNumber, ayahs };
+};

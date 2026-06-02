@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { FaCog, FaSun, FaMoon, FaFont, FaDownload } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { FONT_OPTIONS, FONT_SIZE_OPTIONS } from '../utils/constants';
-import { getStorageInfo } from '../services/indexedDB';
+import { quranDownloadManager } from '../services/downloadManager';
 
 const Settings = () => {
   const { theme, settings, toggleTheme, updateFont, updateFontSize } = useTheme();
@@ -10,7 +10,7 @@ const Settings = () => {
 
   useEffect(() => {
     document.title = 'الإعدادات - القرآن الكريم';
-    getStorageInfo().then(setStorageInfo).catch(() => {});
+    quranDownloadManager.getStorageInfo().then(setStorageInfo).catch(() => {});
   }, []);
 
   const totalMB = (storageInfo.totalSize / (1024 * 1024)).toFixed(1);

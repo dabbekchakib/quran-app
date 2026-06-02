@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaQuran } from 'react-icons/fa';
 import { JUZ_COUNT } from '../utils/constants';
-import { getSurahNumberFromJuz } from '../utils/helpers';
 
 const juzNames = [
   'الم', 'سيقول', 'تلك الرسل', 'لن تنالوا', 'والمحصنات', 'لا يحب الله',
@@ -35,7 +34,7 @@ const JuzList = () => {
         {Array.from({ length: JUZ_COUNT }, (_, i) => i + 1).map((juzNumber) => (
           <Link
             key={juzNumber}
-            to={`/surah/${getSurahNumberFromJuz(juzNumber)}`}
+            to={`/juz/${juzNumber}`}
             className="group block bg-slate-800/40 backdrop-blur-sm border border-teal-500/10 rounded-2xl p-5 hover:bg-slate-800/70 hover:border-teal-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-teal-500/5"
           >
             <div className="flex items-center gap-4">

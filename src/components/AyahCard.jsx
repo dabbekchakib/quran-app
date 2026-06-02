@@ -1,11 +1,15 @@
 import { memo, useCallback } from 'react';
-import { FaCopy } from 'react-icons/fa';
+import { FaCopy, FaPlay, FaPause } from 'react-icons/fa';
 import BookmarkButton from './BookmarkButton';
 
-const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) => {
+const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy, onPlay, isPlaying }) => {
   const handleCopy = useCallback(() => {
     onCopy?.(ayah.text);
   }, [ayah.text, onCopy]);
+
+  const handlePlay = useCallback(() => {
+    onPlay?.(surahNumber, ayah.numberInSurah - 1);
+  }, [surahNumber, ayah.numberInSurah, onPlay]);
 
   return (
     <div
@@ -21,6 +25,20 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
         </div>
 
         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+          {onPlay && (
+            <button
+              onClick={handlePlay}
+              className={`p-2 rounded-lg transition-all duration-200 ${
+                isPlaying
+                  ? 'text-teal-300 bg-teal-500/15'
+                  : 'text-slate-400 hover:text-teal-300 hover:bg-slate-700/50'
+              }`}
+              aria-label={isPlaying ? 'إيقاف التشغيل' : 'تشغيل الآية'}
+              title={isPlaying ? 'إيقاف' : 'تشغيل'}
+            >
+              {isPlaying ? <FaPause size={14} /> : <FaPlay size={13} />}
+            </button>
+          )}
           <button
             onClick={handleCopy}
             className="p-2 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-700/50 transition-all duration-200"

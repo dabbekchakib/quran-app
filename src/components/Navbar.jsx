@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { FaBars, FaTimes, FaBookmark, FaCog, FaList, FaQuran, FaSearch, FaDownload, FaSun, FaMoon } from 'react-icons/fa';
+import { FaBars, FaTimes, FaBookmark, FaCog, FaList, FaSearch, FaDownload, FaSun, FaMoon } from 'react-icons/fa';
 import { LuBookMarked } from 'react-icons/lu';
 import { useTheme } from '../context/ThemeContext';
+import quranLogo from '../assets/quranLogo.png';
 
 const navItems = [
   { path: '/', label: 'السور', icon: FaList },
   { path: '/search', label: 'بحث', icon: FaSearch },
-  { path: '/juz', label: 'الأجزاء', icon: FaQuran },
+  { path: '/juz', label: 'الأجزاء', icon: () => <img src={quranLogo} alt="" className="w-4 h-4" /> },
   { path: '/hizb', label: 'الأحزاب', icon: LuBookMarked },
   { path: '/bookmarks', label: 'المحفوظات', icon: FaBookmark },
   { path: '/downloads', label: 'التحميل', icon: FaDownload },
@@ -31,7 +32,7 @@ const Navbar = () => {
             className="flex items-center gap-2 text-teal-400 hover:text-teal-300 transition-colors"
             aria-label="الصفحة الرئيسية"
           >
-            <FaQuran className="text-2xl" />
+            <img src={quranLogo} alt="القرآن الكريم" className="w-8 h-8" />
             <span className="text-xl font-bold font-[Amiri] hidden sm:block">
               القرآن الكريم
             </span>
