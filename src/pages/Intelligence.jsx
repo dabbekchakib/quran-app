@@ -59,11 +59,7 @@ const Intelligence = () => {
       const answer = await askAI(prompt.trim(), apiKey);
       setResponse(answer || '(لا يوجد رد)');
     } catch (err) {
-      if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
-        setError('مفتاح API غير صالح. يرجى التحقق من المفتاح في إعدادات OpenRouter.');
-      } else {
-        setError('فشل الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.');
-      }
+      setError(err.message || 'فشل الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.');
     } finally {
       setLoading(false);
     }

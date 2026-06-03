@@ -3,8 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { message, model } = req.body;
-  const apiKey = req.headers['x-api-key'];
+  const { message, model, apiKey } = req.body;
 
   if (!apiKey) {
     return res.status(400).json({ error: 'API key required' });
@@ -18,7 +17,7 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         'HTTP-Referer': 'https://quran-app.vercel.app',
         'X-Title': 'Quran App',
       },
