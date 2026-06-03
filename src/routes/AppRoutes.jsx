@@ -12,6 +12,7 @@ const HizbList = lazy(() => import('../pages/HizbList'));
 const HizbDetail = lazy(() => import('../pages/HizbDetail'));
 const Bookmarks = lazy(() => import('../pages/Bookmarks'));
 const Downloads = lazy(() => import('../pages/Downloads'));
+const Notes = lazy(() => import('../pages/Notes'));
 const Settings = lazy(() => import('../pages/Settings'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
@@ -29,6 +30,7 @@ const AppRoutes = () => {
           <Route path="/hizb/:id" element={<HizbDetail />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/downloads" element={<Downloads />} />
+          <Route path="/notes" element={<Notes />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Route>

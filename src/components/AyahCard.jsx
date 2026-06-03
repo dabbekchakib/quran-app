@@ -1,6 +1,7 @@
 import { memo, useCallback, useRef, useState, useEffect } from 'react';
 import { FaCopy, FaPlay, FaPause } from 'react-icons/fa';
 import BookmarkButton from './BookmarkButton';
+import NoteButton from './NoteButton';
 import { formatTime } from '../utils/helpers';
 
 const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) => {
@@ -78,6 +79,7 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
           >
             <FaCopy size={14} />
           </button>
+          <NoteButton surah={surahNumber} ayah={ayah.numberInSurah} text={ayah.text} />
           <BookmarkButton surah={surahNumber} ayah={ayah.numberInSurah} text={ayah.text} />
         </div>
       </div>

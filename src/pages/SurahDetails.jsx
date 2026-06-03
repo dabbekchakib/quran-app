@@ -66,24 +66,32 @@ const SurahDetails = () => {
   }, [surah]);
 
   useEffect(() => {
+    const hash = window.location.hash;
+    const target =
+      hash && hash.startsWith('#ayah-')
+        ? parseInt(hash.replace('#ayah-', ''), 10)
+        : null;
     const lastReadData = localStorage.getItem('quran_last_read');
-    if (lastReadData && surah) {
+    let ayahToScroll = target;
+    if (!ayahToScroll && lastReadData && surah) {
       try {
         const parsed = JSON.parse(lastReadData);
         if (parsed.surah === surahNumber) {
-          setTimeout(() => {
-            const el = document.getElementById(`ayah-${parsed.ayah}`);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el.classList.add('ring-2', 'ring-teal-500/40', 'shadow-lg', 'shadow-teal-500/10');
-              setTimeout(() => {
-                el.classList.remove('ring-2', 'ring-teal-500/40', 'shadow-lg', 'shadow-teal-500/10');
-              }, 2000);
-            }
-          }, 500);
+          ayahToScroll = parsed.ayah;
         }
-      } catch { /* ignore */
-      }
+      } catch { /* ignore */ }
+    }
+    if (ayahToScroll && surah) {
+      setTimeout(() => {
+        const el = document.getElementById(`ayah-${ayahToScroll}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('ring-2', 'ring-teal-500/40', 'shadow-lg', 'shadow-teal-500/10');
+          setTimeout(() => {
+            el.classList.remove('ring-2', 'ring-teal-500/40', 'shadow-lg', 'shadow-teal-500/10');
+          }, 2000);
+        }
+      }, 500);
     }
   }, [surah, surahNumber]);
 
