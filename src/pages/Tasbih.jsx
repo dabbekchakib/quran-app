@@ -63,6 +63,15 @@ const Tasbih = () => {
             المجموع: {totalCount}
           </p>
         )}
+        {tasbihList.length > 0 && (
+          <Link
+            to="/tasbih/history"
+            className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-slate-800/60 backdrop-blur-sm border border-teal-500/10 rounded-xl text-slate-300 hover:text-teal-300 hover:border-teal-500/30 transition-all text-xs"
+          >
+            <FaHistory size={12} />
+            سجل التسبيح
+          </Link>
+        )}
       </div>
 
       <form onSubmit={handleAdd} className="flex gap-2 mb-8">
@@ -83,7 +92,7 @@ const Tasbih = () => {
         </button>
       </form>
 
-      <div className="space-y-4 mb-28">
+      <div className="space-y-4 mb-12">
         {tasbihList.length === 0 && (
           <div className="text-center py-16 text-slate-500">
             <FaHandSparkles className="text-4xl mx-auto mb-4 opacity-30" />
@@ -151,18 +160,6 @@ const Tasbih = () => {
           );
         })}
       </div>
-
-      {tasbihList.length > 0 && (
-        <div className="fixed bottom-20 left-0 right-0 flex justify-center pointer-events-none">
-          <Link
-            to="/tasbih/history"
-            className="pointer-events-auto flex items-center gap-2 px-5 py-3 bg-slate-800/80 backdrop-blur-md border border-teal-500/20 rounded-xl text-slate-300 hover:text-teal-300 transition-all text-sm shadow-xl"
-          >
-            <FaHistory size={14} />
-            سجل التسبيح
-          </Link>
-        </div>
-      )}
     </div>
   );
 };
