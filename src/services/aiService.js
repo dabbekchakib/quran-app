@@ -8,11 +8,11 @@ export const askAI = async (prompt) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.details || data.error || `HTTP ${response.status}`);
+    throw new Error(data.error || `HTTP ${response.status}`);
   }
 
   return {
-    content: data.response?.choices?.[0]?.message?.content || '',
+    content: data.response || '',
     model: data.modelUsed || 'unknown',
   };
 };
