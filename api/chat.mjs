@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           'X-Title': 'Quran App',
         },
         body: JSON.stringify({
-          model: model || 'google/gemma-3-27b-it:free',
+          model: model || 'openai/gpt-oss-120b:free',
           messages: [
             {
               role: 'user',

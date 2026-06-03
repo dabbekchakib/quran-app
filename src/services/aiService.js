@@ -4,7 +4,7 @@ export const askAI = async (prompt) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: prompt,
-      model: 'google/gemma-3-27b-it:free',
+      model: 'openai/gpt-oss-120b:free',
     }),
   });
 
