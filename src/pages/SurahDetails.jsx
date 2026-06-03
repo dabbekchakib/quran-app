@@ -20,8 +20,6 @@ const SurahDetails = () => {
   const surahList = JSON.parse(localStorage.getItem('quran_surahs_cache') || '[]');
   const scrollRef = useRef(null);
 
-  const ayahRefs = useRef({});
-
   const surahNumber = parseInt(id, 10);
   const currentIdx = surahList.findIndex((s) => s.number === surahNumber);
   const hasNext = currentIdx < surahList.length - 1;
@@ -29,8 +27,7 @@ const SurahDetails = () => {
   const nextSurah = hasNext ? surahList[currentIdx + 1] : null;
   const prevSurah = hasPrev ? surahList[currentIdx - 1] : null;
 
-  const isPlayingThisSurah = audio.currentSurah?.number === surahNumber && audio.isPlaying;
-  const isPlayingThisAyah = audio.currentSurah?.number === surahNumber && audio.currentAyahIndex >= 0;
+  const isPlayingThisSurah = audio.currentSurah?.number === surahNumber && audio.isPlaying && audio.playbackMode === 'surah';
 
   useEffect(() => {
     audio.setPlaybackMode('surah');
@@ -120,23 +117,14 @@ const SurahDetails = () => {
     }
   }, []);
 
-  const handlePlayAyah = useCallback((ayahIndex) => {
-    if (audio.currentSurah?.number === surahNumber && audio.currentAyahIndex === ayahIndex && audio.isPlaying) {
-      audio.togglePlay();
-    } else {
-      audio.setPlaybackMode('verse');
-      audio.playSurah(surahNumber, ayahIndex);
-    }
-  }, [audio, surahNumber]);
-
   const handlePlaySurah = useCallback(() => {
-    if (audio.isPlaying && audio.currentSurah?.number === surahNumber && audio.playbackMode === 'surah') {
+    if (isPlayingThisSurah) {
       audio.togglePlay();
     } else {
       audio.setPlaybackMode('surah');
       audio.playSurah(surahNumber);
     }
-  }, [audio, surahNumber]);
+  }, [isPlayingThisSurah, audio, surahNumber]);
 
   if (loading) return <LoadingSpinner text="جاري تحميل السورة..." />;
 
@@ -209,55 +197,31 @@ const SurahDetails = () => {
                 ayahFont={settings.font}
                 fontSizeClass={settings.fontSize}
                 onCopy={handleCopy}
-                onPlayAyah={handlePlayAyah}
-                isCurrentAyah={audio.currentSurah?.number === surahNumber && audio.currentAyahIndex === ayah.numberInSurah - 1}
               />
             </div>
           </div>
         ))}
       </div>
 
-      {isPlayingThisAyah && (
+      {isPlayingThisSurah && (
         <div className="fixed bottom-0 right-0 left-0 bg-slate-900/95 backdrop-blur-xl border-t border-teal-500/20 p-3 z-40">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {audio.playbackMode === 'surah' ? (
-                <>
-                  <button onClick={audio.prevSurah} disabled={!hasPrev}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-800 transition-all disabled:opacity-30"
-                    aria-label="السورة السابقة">
-                    <FaBackward size={12} />
-                  </button>
-                  <button onClick={audio.togglePlay}
-                    className="w-9 h-9 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/30"
-                    aria-label={audio.isPlaying ? 'إيقاف' : 'تشغيل'}>
-                    {audio.isPlaying ? <FaPause size={12} /> : <FaPlay size={12} className="mr-0.5" />}
-                  </button>
-                  <button onClick={audio.nextSurah} disabled={!hasNext}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-800 transition-all disabled:opacity-30"
-                    aria-label="السورة التالية">
-                    <FaForward size={12} />
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button onClick={audio.prevAyah}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-800 transition-all disabled:opacity-30"
-                    aria-label="الآية السابقة">
-                    <FaBackward size={12} />
-                  </button>
-                  <button onClick={audio.togglePlay}
-                    className="w-9 h-9 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/30"
-                    aria-label={audio.isPlaying ? 'إيقاف' : 'تشغيل'}>
-                    {audio.isPlaying ? <FaPause size={12} /> : <FaPlay size={12} className="mr-0.5" />}
-                  </button>
-                  <button onClick={audio.nextAyah}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-800 transition-all disabled:opacity-30"
-                    aria-label="الآية التالية">
-                    <FaForward size={12} />
-                  </button>
-                </>
-              )}
+              <button onClick={audio.prevSurah} disabled={!hasPrev}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-800 transition-all disabled:opacity-30"
+                aria-label="السورة السابقة">
+                <FaBackward size={12} />
+              </button>
+              <button onClick={audio.togglePlay}
+                className="w-9 h-9 rounded-full bg-gradient-to-r from-teal-500 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/30"
+                aria-label={audio.isPlaying ? 'إيقاف' : 'تشغيل'}>
+                {audio.isPlaying ? <FaPause size={12} /> : <FaPlay size={12} className="mr-0.5" />}
+              </button>
+              <button onClick={audio.nextSurah} disabled={!hasNext}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-800 transition-all disabled:opacity-30"
+                aria-label="السورة التالية">
+                <FaForward size={12} />
+              </button>
             </div>
 
             <div className="flex items-center gap-3">
@@ -268,33 +232,21 @@ const SurahDetails = () => {
               <span className="text-[10px] text-slate-400 font-mono min-w-[60px] text-left" dir="ltr">
                 {formatTime(audio.currentTime)} / {formatTime(audio.duration)}
               </span>
-              <span className="text-[10px] text-slate-500">
-                {audio.playbackMode === 'surah' ? 'تلاوة كاملة' : `آية ${audio.currentAyahIndex + 1}`}
-              </span>
+              <span className="text-[10px] text-slate-500">تلاوة كاملة</span>
             </div>
 
             <div className="flex items-center gap-2">
-              {audio.playbackMode === 'surah' ? (
-                <>
-                  {prevSurah && (
-                    <Link to={`/surah/${prevSurah.number}`}
-                      className="text-[10px] text-slate-500 hover:text-teal-300 transition-colors">
-                      {prevSurah.name}
-                    </Link>
-                  )}
-                  {nextSurah && (
-                    <Link to={`/surah/${nextSurah.number}`}
-                      className="text-[10px] text-slate-500 hover:text-teal-300 transition-colors">
-                      {nextSurah.name}
-                    </Link>
-                  )}
-                </>
-              ) : (
-                audio.currentAyah && (
-                  <span className="text-[10px] text-teal-400" dir="rtl">
-                    {audio.currentAyah.text.slice(0, 30)}...
-                  </span>
-                )
+              {prevSurah && (
+                <Link to={`/surah/${prevSurah.number}`}
+                  className="text-[10px] text-slate-500 hover:text-teal-300 transition-colors">
+                  {prevSurah.name}
+                </Link>
+              )}
+              {nextSurah && (
+                <Link to={`/surah/${nextSurah.number}`}
+                  className="text-[10px] text-slate-500 hover:text-teal-300 transition-colors">
+                  {nextSurah.name}
+                </Link>
               )}
             </div>
           </div>
