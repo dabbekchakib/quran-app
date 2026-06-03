@@ -23,6 +23,7 @@ const PRESETS = [
 const Intelligence = () => {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+  const [modelUsed, setModelUsed] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activePreset, setActivePreset] = useState(null);
@@ -46,10 +47,12 @@ const Intelligence = () => {
     setLoading(true);
     setError(null);
     setResponse('');
+    setModelUsed('');
 
     try {
-      const answer = await askAI(prompt.trim());
-      setResponse(answer || '(لا يوجد رد)');
+      const { content, model } = await askAI(prompt.trim());
+      setResponse(content || '(لا يوجد رد)');
+      setModelUsed(model);
     } catch (err) {
       setError(err.message || 'فشل الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.');
     } finally {
@@ -147,6 +150,11 @@ const Intelligence = () => {
               <FaRobot className="text-sm text-teal-400" />
             </div>
             <span className="text-sm text-slate-400 font-medium">الرد</span>
+            {modelUsed && (
+              <span className="text-[10px] px-2 py-0.5 bg-slate-700/50 rounded-full text-slate-400 font-mono" dir="ltr">
+                {modelUsed}
+              </span>
+            )}
           </div>
           <div
             ref={responseRef}
