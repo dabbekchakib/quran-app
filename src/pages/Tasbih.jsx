@@ -59,7 +59,7 @@ const Tasbih = () => {
   const totalCount = tasbihList.reduce((sum, t) => sum + t.count, 0);
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-4 sm:px-0">
       <div className="text-center mb-8">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 mb-6">
           <FaHandSparkles className="text-3xl text-teal-400" />
@@ -112,8 +112,8 @@ const Tasbih = () => {
                 isComplete ? 'border-emerald-500/30' : 'border-teal-500/10'
               } ${animatingId === item.id ? 'scale-[1.02] ring-2 ring-teal-400/30' : ''}`}
             >
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-lg font-bold text-slate-100 font-[Amiri]">
+              <div className="flex items-center justify-between mb-3 gap-2">
+                <span className="text-base sm:text-lg font-bold text-slate-100 font-[Amiri] truncate min-w-0">
                   {item.label}
                 </span>
                 <div className="flex items-center gap-1">
@@ -137,7 +137,7 @@ const Tasbih = () => {
               </div>
 
               <div className="flex items-center justify-between gap-4 mb-3">
-                <span className="text-5xl sm:text-6xl font-bold text-teal-300 tabular-nums transition-all duration-200 font-[Amiri] leading-none">
+                <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-teal-300 tabular-nums transition-all duration-200 font-[Amiri] leading-none">
                   {item.count}
                 </span>
                 <span className="text-xs text-slate-500">/{item.target}</span>
