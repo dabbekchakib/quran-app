@@ -68,7 +68,7 @@ const NoteButton = memo(({ surah, ayah, text }) => {
           className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
           onClick={() => setOpen(false)}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-lg" />
           <div
             className="relative w-full max-w-md bg-slate-800 border border-teal-500/20 rounded-xl p-4 shadow-2xl shadow-black/40"
             onClick={(e) => e.stopPropagation()}
