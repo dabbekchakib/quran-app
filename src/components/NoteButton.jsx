@@ -67,7 +67,7 @@ const NoteButton = memo(({ surah, ayah, text }) => {
 
       <dialog
         ref={dialogRef}
-        className="w-full max-w-md rounded-xl border border-teal-500/20 bg-slate-800 p-0 shadow-2xl shadow-black/40 backdrop:bg-black/60 backdrop:backdrop-blur-lg"
+        className="m-auto w-full max-w-md rounded-xl border border-teal-500/20 bg-slate-800 p-0 shadow-2xl shadow-black/40 backdrop:bg-black/60 backdrop:backdrop-blur-lg"
         onClose={() => setOpen(false)}
         onClick={(e) => { if (e.target === dialogRef.current) setOpen(false); }}
       >
