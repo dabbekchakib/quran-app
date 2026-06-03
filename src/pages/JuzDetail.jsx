@@ -128,6 +128,7 @@ const JuzDetail = () => {
               </h2>
               <p className="text-slate-400 text-sm">{group.englishName}</p>
             </div>
+            {console.log('Group ayahs:', group.ayahs)}
             <div className="space-y-4">
               {group.ayahs.map((ayah) => (
                 <AyahCard

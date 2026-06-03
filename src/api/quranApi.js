@@ -34,7 +34,7 @@ export const fetchJuzList = async () => {
 };
 
 export const fetchJuzById = async (id) => {
-  const response = await api.get(`/juz/${id}`);
+  const response = await api.get(`/juz/${id}/ar.alafasy`);
   return response.data.data;
 };
 
@@ -63,7 +63,7 @@ export const searchQuran = async (query, language = 'ar') => {
   return response.data.data;
 };
 
-export const fetchFullHizb = async (hizbNumber, edition = 'quran-uthmani') => {
+export const fetchFullHizb = async (hizbNumber, edition = 'ar.alafasy') => {
   const start = (hizbNumber - 1) * 4 + 1;
   const quarterNumbers = [start, start + 1, start + 2, start + 3];
   const responses = await Promise.all(
