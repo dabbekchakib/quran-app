@@ -7,6 +7,7 @@ import { formatTime } from '../utils/helpers';
 const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
@@ -35,6 +36,7 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
       audio.pause();
     } else {
       audio.play().catch(() => {});
+      setShowPlayer(true);
     }
     setPlaying(!playing);
   }, [playing]);
@@ -64,10 +66,21 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/20 flex items-center justify-center text-teal-400 font-bold text-xs">
+          <button
+            onClick={() => setShowPlayer((p) => !p)}
+            className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs transition-all duration-200 ${
+              showPlayer
+                ? 'bg-gradient-to-br from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/30'
+                : 'bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/20 text-teal-400'
+            }`}
+            aria-label={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
+            title={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
+          >
+            {showPlayer ? <FaPause size={10} /> : <FaPlay size={10} className="mr-0.5" />}
+          </button>
+          <span className="text-xs text-slate-500">
             {ayah.numberInSurah}
           </span>
-          <span className="text-slate-500 text-xs">آية</span>
         </div>
 
         <div className="flex items-center gap-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
@@ -93,35 +106,37 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
         {ayah.text}
       </p>
 
-      <div className="mt-4 pt-3 border-t border-teal-500/10 flex items-center gap-3">
-        <button
-          onClick={togglePlay}
-          className="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 flex items-center justify-center text-white transition-all shadow-sm"
-          aria-label={playing ? 'إيقاف' : 'تشغيل الآية'}
-          title={playing ? 'إيقاف' : 'تشغيل'}
-        >
-          {playing ? <FaPause size={11} /> : <FaPlay size={11} className="mr-0.5" />}
-        </button>
+      {(showPlayer || playing) && (
+        <div className="mt-4 pt-3 border-t border-teal-500/10 flex items-center gap-3">
+          <button
+            onClick={togglePlay}
+            className="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 flex items-center justify-center text-white transition-all shadow-sm"
+            aria-label={playing ? 'إيقاف' : 'تشغيل الآية'}
+            title={playing ? 'إيقاف' : 'تشغيل'}
+          >
+            {playing ? <FaPause size={11} /> : <FaPlay size={11} className="mr-0.5" />}
+          </button>
 
-        <div
-          className="flex-1 h-1.5 bg-slate-700 rounded-full cursor-pointer overflow-hidden"
-          onClick={handleSeek}
-          role="slider"
-          aria-label="مدة التشغيل"
-          aria-valuemin={0}
-          aria-valuemax={duration}
-          aria-valuenow={currentTime}
-        >
           <div
-            className="h-full bg-gradient-to-l from-teal-400 to-emerald-400 rounded-full transition-all duration-150"
-            style={{ width: `${progressPct}%` }}
-          />
-        </div>
+            className="flex-1 h-1.5 bg-slate-700 rounded-full cursor-pointer overflow-hidden"
+            onClick={handleSeek}
+            role="slider"
+            aria-label="مدة التشغيل"
+            aria-valuemin={0}
+            aria-valuemax={duration}
+            aria-valuenow={currentTime}
+          >
+            <div
+              className="h-full bg-gradient-to-l from-teal-400 to-emerald-400 rounded-full transition-all duration-150"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
 
-        <span className="flex-shrink-0 text-[10px] text-slate-500 font-mono min-w-[30px] text-left" dir="ltr">
-          {formatTime(currentTime)}
-        </span>
-      </div>
+          <span className="flex-shrink-0 text-[10px] text-slate-500 font-mono min-w-[30px] text-left" dir="ltr">
+            {formatTime(currentTime)}
+          </span>
+        </div>
+      )}
     </div>
   );
 });
