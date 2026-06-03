@@ -66,21 +66,10 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
 
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowPlayer((p) => !p)}
-            className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-xs transition-all duration-200 ${
-              showPlayer
-                ? 'bg-gradient-to-br from-teal-500 to-emerald-500 text-white shadow-lg shadow-teal-500/30'
-                : 'bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/20 text-teal-400'
-            }`}
-            aria-label={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
-            title={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
-          >
-            {showPlayer ? <FaPause size={10} /> : <FaPlay size={10} className="mr-0.5" />}
-          </button>
-          <span className="text-xs text-slate-500">
+          <span className="w-9 h-9 rounded-lg bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/20 flex items-center justify-center text-teal-400 font-bold text-xs">
             {ayah.numberInSurah}
           </span>
+          <span className="text-slate-500 text-xs">آية</span>
         </div>
 
         <div className="flex items-center gap-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
@@ -105,6 +94,15 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
       >
         {ayah.text}
       </p>
+
+      <button
+        onClick={() => setShowPlayer((p) => !p)}
+        className="mb-2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 bg-teal-500/15 text-teal-400 hover:bg-teal-500/30 ml-auto"
+        aria-label={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
+        title={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
+      >
+        {showPlayer ? <FaPause size={9} /> : <FaPlay size={9} className="mr-px" />}
+      </button>
 
       {(showPlayer || playing) && (
         <div className="mt-4 pt-3 border-t border-teal-500/10 flex items-center gap-3">
