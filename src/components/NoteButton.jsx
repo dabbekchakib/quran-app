@@ -65,7 +65,7 @@ const NoteButton = memo(({ surah, ayah, text }) => {
 
       {open && (
         <div
-          className="absolute left-0 top-full mt-2 z-50 w-72 bg-slate-800 border border-teal-500/20 rounded-xl p-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
+          className="absolute left-0 top-full mt-2 z-[9999] w-72 max-w-[90vw] bg-slate-800 border border-teal-500/20 rounded-xl p-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex items-center justify-between mb-2">
@@ -77,6 +77,12 @@ const NoteButton = memo(({ surah, ayah, text }) => {
               <FaTimes size={12} />
             </button>
           </div>
+          <p
+            className="text-xs leading-relaxed text-teal-300/70 bg-teal-500/5 rounded-lg p-2 border border-teal-500/10 mb-2"
+            dir="rtl"
+          >
+            {text}
+          </p>
           <textarea
             ref={inputRef}
             value={input}
@@ -84,7 +90,7 @@ const NoteButton = memo(({ surah, ayah, text }) => {
             onKeyDown={handleKeyDown}
             placeholder="اكتب ملحوظتك هنا..."
             className="w-full bg-slate-900/60 border border-slate-600/50 rounded-lg p-2.5 text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none focus:border-teal-500/50 transition-colors"
-            rows={3}
+            rows={4}
             dir="rtl"
           />
           <div className="flex justify-end gap-2 mt-2">
