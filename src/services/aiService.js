@@ -4,7 +4,7 @@ export const askAI = async (prompt) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: prompt,
-      model: 'openai/gpt-oss-120b:free',
+      model: 'openrouter/free',
     }),
   });
 

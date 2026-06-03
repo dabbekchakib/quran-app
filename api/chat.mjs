@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           'X-Title': 'Quran App',
         },
         body: JSON.stringify({
-          model: model || 'openai/gpt-oss-120b:free',
+          model: model || 'openrouter/free',
           messages: [
             {
               role: 'user',
