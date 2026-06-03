@@ -14,8 +14,8 @@ const Footer = () => {
             <span className="font-[Amiri] text-lg font-bold">القرآن الكريم</span>
           </div>
           <p className="text-slate-400 text-sm text-center">
-            وَإِنَّهُ لَكِتَابٌ عَزِيزٌ * لا يَأْتِيهِ الْبَاطِلُ مِنْ بَيْنِ يَدَيْهِ وَلا مِنْ خَلْفِهِ
-          </p>
+وَاتْلُ مَا أُوحِيَ إِلَيْكَ مِن كِتَابِ رَبِّكَ ۖ لَا مُبَدِّلَ لِكَلِمَاتِهِ وَلَن تَجِدَ مِن دُونِهِ مُلْتَحَدًا
+         </p>
           <p className="text-slate-500 text-xs flex items-center gap-1">
             صُنع بـ <FaHeart className="text-red-400 text-xs" /> للقرآن الكريم
           </p>

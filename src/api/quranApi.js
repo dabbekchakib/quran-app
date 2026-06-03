@@ -59,7 +59,7 @@ export const fetchFullQuran = async () => {
 };
 
 export const searchQuran = async (query, language = 'ar') => {
-  const response = await api.get(`/search/${encodeURIComponent(query)}/all/${language}`);
+  const response = await api.get(`/search/${encodeURIComponent(query)}/all/quran-uthmani`);
   return response.data.data;
 };
 
@@ -73,4 +73,9 @@ export const fetchFullHizb = async (hizbNumber, edition = 'ar.alafasy') => {
   );
   const ayahs = responses.flatMap((res) => res.data.data.ayahs);
   return { hizbNumber, ayahs };
+};
+
+export const fetchPageById = async (pageNumber) => {
+  const response = await api.get(`/page/${pageNumber}/quran-uthmani`);
+  return response.data.data;
 };

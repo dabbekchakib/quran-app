@@ -10,6 +10,7 @@ const JuzList = lazy(() => import('../pages/JuzList'));
 const JuzDetail = lazy(() => import('../pages/JuzDetail'));
 const HizbList = lazy(() => import('../pages/HizbList'));
 const HizbDetail = lazy(() => import('../pages/HizbDetail'));
+const Page = lazy(() => import('../pages/Page'));
 const Bookmarks = lazy(() => import('../pages/Bookmarks'));
 const Downloads = lazy(() => import('../pages/Downloads'));
 const Notes = lazy(() => import('../pages/Notes'));
@@ -28,6 +29,7 @@ const AppRoutes = () => {
           <Route path="/juz/:id" element={<JuzDetail />} />
           <Route path="/hizb" element={<HizbList />} />
           <Route path="/hizb/:id" element={<HizbDetail />} />
+          <Route path="/page/:id" element={<Page />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/notes" element={<Notes />} />

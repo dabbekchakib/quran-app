@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { FaBars, FaTimes, FaBookmark, FaCog, FaList, FaSearch, FaDownload, FaStickyNote, FaSun, FaMoon, FaQuran } from 'react-icons/fa';
+import { FaBars, FaTimes, FaBookmark, FaCog, FaList, FaSearch, FaDownload, FaStickyNote, FaSun, FaMoon, FaQuran, FaBook } from 'react-icons/fa';
 import { LuBookMarked } from 'react-icons/lu';
 import { useTheme } from '../context/ThemeContext';
 import quranLogo from '../assets/quranLogo.png';
@@ -8,6 +8,7 @@ import quranLogo from '../assets/quranLogo.png';
 const navItems = [
   { path: '/', label: 'السور', icon: FaList },
   { path: '/search', label: 'بحث', icon: FaSearch },
+  { path: '/page/1', label: 'الصفحات', icon: FaBook },
   { path: '/juz', label: 'الأجزاء', icon: FaQuran },
   { path: '/hizb', label: 'الأحزاب', icon: LuBookMarked },
   { path: '/bookmarks', label: 'المحفوظات', icon: FaBookmark },
