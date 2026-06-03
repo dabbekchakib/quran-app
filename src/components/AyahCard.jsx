@@ -70,7 +70,7 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
           <span className="text-slate-500 text-xs">آية</span>
         </div>
 
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        <div className="flex items-center gap-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={handleCopy}
             className="p-2 rounded-lg text-slate-400 hover:text-teal-300 hover:bg-slate-700/50 transition-all duration-200"
