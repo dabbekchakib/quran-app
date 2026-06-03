@@ -10,8 +10,6 @@ export default async function handler(req, res) {
   }
 
   const FREE_MODELS = [
-    "openai/gpt-oss-120b:free",
-    "nvidia/llama-3.1-nemotron-3-super:free",
     "z-ai/glm-4.5-air:free",
     "poolside/laguna-m.1:free",
     "poolside/laguna-xs.2:free",
