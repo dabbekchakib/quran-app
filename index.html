@@ -5,14 +5,37 @@
     <link rel="icon" type="image/png" href="/quranLogo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Quran - Read and listen to the Holy Quran" />
-    <meta name="theme-color" content="#0F172A" />
+    <meta name="theme-color" content="#1A8579" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>القرآن الكريم - Quran</title>
+    <style>
+      #splash {
+        position: fixed; inset: 0; z-index: 99999;
+        display: flex; align-items: center; justify-content: center;
+        background: rgb(26 133 121);
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+      }
+      #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+      #splash-icon {
+        width: 128px; height: 128px;
+        border: 3px solid white;
+        border-radius: 434px;
+        overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 40px rgba(0,0,0,0.2);
+      }
+      #splash-icon img { width: 80%; height: 80%; object-fit: contain; }
+    </style>
     <link rel="preconnect" href="https://api.alquran.cloud" />
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Scheherazade+New:wght@400;500;600;700&family=Lateef:wght@200;300;400;500;600;700;800&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <div id="splash">
+      <div id="splash-icon">
+        <img src="/quranLogo.png" alt="Quran" />
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
