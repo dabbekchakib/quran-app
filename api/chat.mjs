@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           'X-Title': 'Quran App',
         },
         body: JSON.stringify({
-          model: model || 'openai/gpt-4o-mini',
+          model: model || 'deepseek/deepseek-chat-v3:free',
           messages: [
             {
               role: 'user',

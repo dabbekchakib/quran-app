@@ -4,7 +4,7 @@ export const askAI = async (prompt, apiKey) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: prompt,
-      model: 'openai/gpt-4o-mini',
+      model: 'deepseek/deepseek-chat-v3:free',
       apiKey,
     }),
   });
