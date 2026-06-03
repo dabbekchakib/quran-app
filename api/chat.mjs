@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           'X-Title': 'Quran App',
         },
         body: JSON.stringify({
-          model: model || 'deepseek/deepseek-chat-v3:free',
+          model: model || 'google/gemma-3-27b-it:free',
           messages: [
             {
               role: 'user',

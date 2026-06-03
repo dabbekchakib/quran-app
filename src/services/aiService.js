@@ -1,11 +1,10 @@
-export const askAI = async (prompt, apiKey) => {
+export const askAI = async (prompt) => {
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: prompt,
       model: 'deepseek/deepseek-chat-v3:free',
-      apiKey,
     }),
   });
 

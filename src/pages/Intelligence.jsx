@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { FaRobot, FaPaperPlane, FaKey, FaBrain, FaBookOpen, FaSearch, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaRobot, FaPaperPlane, FaBrain, FaBookOpen, FaSearch } from 'react-icons/fa';
 import { askAI } from '../services/aiService';
 
 const PRESETS = [
@@ -21,8 +21,6 @@ const PRESETS = [
 ];
 
 const Intelligence = () => {
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('openrouter_key') || '');
-  const [showKeyInput, setShowKeyInput] = useState(!apiKey);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -41,12 +39,6 @@ const Intelligence = () => {
     }
   }, [response]);
 
-  const saveApiKey = (key) => {
-    setApiKey(key);
-    localStorage.setItem('openrouter_key', key);
-    setShowKeyInput(false);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!prompt.trim() || loading) return;
@@ -56,7 +48,7 @@ const Intelligence = () => {
     setResponse('');
 
     try {
-      const answer = await askAI(prompt.trim(), apiKey);
+      const answer = await askAI(prompt.trim());
       setResponse(answer || '(لا يوجد رد)');
     } catch (err) {
       setError(err.message || 'فشل الاتصال. تحقق من اتصالك بالإنترنت وحاول مرة أخرى.');
@@ -84,46 +76,6 @@ const Intelligence = () => {
         <p className="text-slate-400 text-sm sm:text-base">
           اسأل عن القرآن والتفسير والأحكام الشرعية
         </p>
-      </div>
-
-      <div className="bg-slate-800/40 backdrop-blur-sm border border-teal-500/10 rounded-2xl mb-6">
-        <button
-          onClick={() => setShowKeyInput(!showKeyInput)}
-          className="w-full flex items-center justify-between p-4 text-slate-300 hover:text-slate-100 transition-colors"
-        >
-          <span className="flex items-center gap-2 text-sm">
-            <FaKey className="text-teal-400" />
-            {apiKey ? 'مفتاح API متصل' : 'إعداد مفتاح OpenRouter'}
-          </span>
-          {showKeyInput ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
-        </button>
-        {showKeyInput && (
-          <div className="px-4 pb-4">
-            <div className="flex gap-2">
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="أدخل مفتاح OpenRouter API"
-                className="flex-1 px-4 py-2.5 text-sm bg-slate-700/50 border border-teal-500/20 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400 transition-colors"
-              />
-              <button
-                onClick={() => saveApiKey(apiKey)}
-                disabled={!apiKey.trim()}
-                className="px-4 py-2.5 bg-teal-600 hover:bg-teal-500 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-xl text-sm transition-colors"
-              >
-                حفظ
-              </button>
-            </div>
-            <p className="text-xs text-slate-500 mt-2">
-              احصل على مفتاح مجاني من{' '}
-              <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer"
-                className="text-teal-400 hover:text-teal-300 underline">
-                openrouter.ai/keys
-              </a>
-            </p>
-          </div>
-        )}
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
@@ -161,15 +113,10 @@ const Intelligence = () => {
         <div className="flex items-center justify-between">
           <span className="text-xs text-slate-500">
             {loading ? 'جاري المعالجة...' : 'Ctrl+Enter للإرسال'}
-            {!apiKey && !showKeyInput && (
-              <button onClick={() => setShowKeyInput(true)} className="mr-3 text-amber-400 hover:text-amber-300 underline">
-                أدخل مفتاح API
-              </button>
-            )}
           </span>
           <button
             type="submit"
-            disabled={!prompt.trim() || loading || !apiKey}
+            disabled={!prompt.trim() || loading}
             className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 disabled:from-slate-700 disabled:to-slate-700 text-white rounded-xl text-sm font-medium transition-all duration-200 disabled:text-slate-500 shadow-lg shadow-teal-500/10 disabled:shadow-none"
           >
             {loading ? (
