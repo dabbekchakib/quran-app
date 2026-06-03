@@ -111,6 +111,7 @@ const NoteButton = memo(({ surah, ayah, text }) => {
             >
               حفظ
             </button>
+            </div>
           </div>
         </div>
       )}
