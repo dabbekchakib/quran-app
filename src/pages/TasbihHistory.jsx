@@ -43,16 +43,6 @@ const TasbihHistory = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <Link
-          to="/tasbih"
-          className="inline-flex items-center gap-2 text-slate-400 hover:text-teal-300 transition-colors text-sm"
-        >
-          <FaArrowRight />
-          <span>العودة للتسبيح</span>
-        </Link>
-      </div>
-
       <div className="text-center mb-10">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 mb-6">
           <FaHandSparkles className="text-3xl text-teal-400" />
@@ -60,9 +50,16 @@ const TasbihHistory = () => {
         <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 font-[Amiri] mb-3">
           سجل التسبيح
         </h1>
-        <p className="text-slate-400 text-sm sm:text-base">
+        <p className="text-slate-400 text-sm sm:text-base mb-4">
           استعراض أيام التسبيح السابقة
         </p>
+        <Link
+          to="/tasbih"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800/60 backdrop-blur-sm border border-teal-500/10 rounded-xl text-slate-300 hover:text-teal-300 hover:border-teal-500/30 transition-all text-xs"
+        >
+          <FaArrowRight />
+          العودة للتسبيح
+        </Link>
       </div>
 
       {sortedDates.length === 0 && (
