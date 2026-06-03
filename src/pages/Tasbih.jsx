@@ -1,20 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { FaPlus, FaTrash, FaUndo, FaHistory, FaHandSparkles } from 'react-icons/fa';
 import {
-  getTodayTasbih,
-  addTasbih,
-  incrementTasbih,
-  resetTasbih,
-  deleteTasbih,
-  getTodayKey,
+  FaPlus, FaTrash, FaUndo, FaHistory, FaHandSparkles,
+} from 'react-icons/fa';
+import {
+  getTodayTasbih, addTasbih, incrementTasbih, resetTasbih, deleteTasbih, getTodayKey,
 } from '../services/tasbihService';
 
 const Tasbih = () => {
   const [tasbihList, setTasbihList] = useState([]);
   const [label, setLabel] = useState('');
   const [animatingId, setAnimatingId] = useState(null);
-
   const todayKey = getTodayKey();
 
   useEffect(() => {
@@ -23,51 +19,44 @@ const Tasbih = () => {
   }, []);
 
   const todayDate = new Date().toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 
   const handleAdd = useCallback((e) => {
     e.preventDefault();
     const trimmed = label.trim();
     if (!trimmed) return;
-    const updated = addTasbih(trimmed);
-    setTasbihList([...updated]);
+    setTasbihList([...addTasbih(trimmed)]);
     setLabel('');
   }, [label]);
 
   const handleIncrement = useCallback((id) => {
-    const updated = incrementTasbih(id);
-    setTasbihList([...updated]);
+    setTasbihList([...incrementTasbih(id)]);
     setAnimatingId(id);
     if (navigator.vibrate) navigator.vibrate(10);
     setTimeout(() => setAnimatingId(null), 200);
   }, []);
 
   const handleReset = useCallback((id) => {
-    const updated = resetTasbih(id);
-    setTasbihList([...updated]);
+    setTasbihList([...resetTasbih(id)]);
   }, []);
 
   const handleDelete = useCallback((id) => {
-    const updated = deleteTasbih(id);
-    setTasbihList([...updated]);
+    setTasbihList([...deleteTasbih(id)]);
   }, []);
 
   const totalCount = tasbihList.reduce((sum, t) => sum + t.count, 0);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-0">
-      <div className="text-center mb-8">
+    <div className="max-w-4xl mx-auto">
+      <div className="text-center mb-10">
         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 mb-6">
           <FaHandSparkles className="text-3xl text-teal-400" />
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 font-[Amiri] mb-2">
+        <h1 className="text-3xl sm:text-4xl font-bold text-slate-100 font-[Amiri] mb-3">
           التسبيح
         </h1>
-        <p className="text-slate-400 text-sm mb-1">{todayDate}</p>
+        <p className="text-slate-400 text-sm sm:text-base mb-1">{todayDate}</p>
         <p className="text-slate-500 text-xs font-mono" dir="ltr">{todayKey}</p>
         {tasbihList.length > 0 && (
           <p className="text-teal-400 text-lg mt-2 font-bold">
@@ -82,7 +71,7 @@ const Tasbih = () => {
           value={label}
           onChange={(e) => setLabel(e.target.value)}
           placeholder="أضف تسبيحاً جديداً..."
-          className="flex-1 px-4 py-3 bg-slate-800/40 backdrop-blur-sm border border-teal-500/10 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400/50 transition-colors text-sm"
+          className="flex-1 min-w-0 px-4 py-3 bg-slate-800/40 backdrop-blur-sm border border-teal-500/10 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-400/50 transition-colors text-sm"
         />
         <button
           type="submit"
@@ -98,7 +87,7 @@ const Tasbih = () => {
         {tasbihList.length === 0 && (
           <div className="text-center py-16 text-slate-500">
             <FaHandSparkles className="text-4xl mx-auto mb-4 opacity-30" />
-            <p>لا توجد تسبيحات اليوم</p>
+            <p className="text-sm sm:text-base">لا توجد تسبيحات اليوم</p>
             <p className="text-xs mt-1">أضف تسبيحاً جديداً للبدء</p>
           </div>
         )}
@@ -108,7 +97,7 @@ const Tasbih = () => {
           return (
             <div
               key={item.id}
-              className={`bg-slate-800/40 backdrop-blur-sm border rounded-2xl p-5 transition-all duration-200 ${
+              className={`bg-slate-800/40 backdrop-blur-sm border rounded-2xl p-6 transition-all duration-200 ${
                 isComplete ? 'border-emerald-500/30' : 'border-teal-500/10'
               } ${animatingId === item.id ? 'scale-[1.02] ring-2 ring-teal-400/30' : ''}`}
             >
@@ -116,10 +105,10 @@ const Tasbih = () => {
                 <span className="text-base sm:text-lg font-bold text-slate-100 font-[Amiri] truncate min-w-0">
                   {item.label}
                 </span>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <button
                     onClick={() => handleReset(item.id)}
-                    className="p-2 rounded-lg text-slate-500 hover:text-amber-400 hover:bg-slate-700/50 transition-all"
+                    className="p-2 rounded-lg text-slate-400 hover:text-amber-300 hover:bg-slate-700/50 transition-all"
                     title="إعادة تعيين"
                     aria-label="إعادة تعيين"
                   >
@@ -127,7 +116,7 @@ const Tasbih = () => {
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-slate-700/50 transition-all"
+                    className="p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700/50 transition-all"
                     title="حذف"
                     aria-label="حذف"
                   >
@@ -136,11 +125,11 @@ const Tasbih = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-4 mb-3">
+              <div className="flex items-end justify-between gap-4 mb-3">
                 <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-teal-300 tabular-nums transition-all duration-200 font-[Amiri] leading-none">
                   {item.count}
                 </span>
-                <span className="text-xs text-slate-500">/{item.target}</span>
+                <span className="text-xs text-slate-500 mb-1">/{item.target}</span>
               </div>
 
               <div className="w-full h-1.5 bg-slate-700 rounded-full mb-4 overflow-hidden">
