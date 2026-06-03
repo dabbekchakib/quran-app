@@ -51,6 +51,20 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
     setCurrentTime(audio.currentTime);
   }, [duration]);
 
+  const handleFixedPlay = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (showPlayer && playing) {
+      audio.pause();
+      setPlaying(false);
+      setShowPlayer(false);
+    } else {
+      audio.play().catch(() => {});
+      setPlaying(true);
+      setShowPlayer(true);
+    }
+  }, [showPlayer, playing]);
+
   const handleCopy = useCallback(() => {
     onCopy?.(ayah.text);
   }, [ayah.text, onCopy]);
@@ -96,7 +110,7 @@ const AyahCard = memo(({ ayah, surahNumber, ayahFont, fontSizeClass, onCopy }) =
       </p>
 
       <button
-        onClick={() => setShowPlayer((p) => !p)}
+        onClick={handleFixedPlay}
         className="mb-2 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 bg-teal-500/15 text-teal-400 hover:bg-teal-500/30 ml-auto"
         aria-label={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
         title={showPlayer ? 'إخفاء المشغل' : 'تشغيل الآية'}
