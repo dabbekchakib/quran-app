@@ -4,7 +4,7 @@ export const askAI = async (prompt) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       message: prompt,
-      model: 'deepseek/deepseek-chat-v3:free',
+      model: 'google/gemma-3-27b-it:free',
     }),
   });
 
