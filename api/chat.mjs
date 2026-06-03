@@ -10,6 +10,7 @@ export default async function handler(req, res) {
   }
 
   const FREE_MODELS = [
+    "google/gemma-4-26b-a4b-it:free",
     "z-ai/glm-4.5-air:free",
     "poolside/laguna-m.1:free",
     "poolside/laguna-xs.2:free",
