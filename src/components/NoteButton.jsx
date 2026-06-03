@@ -7,12 +7,17 @@ const NoteButton = memo(({ surah, ayah, text }) => {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const inputRef = useRef(null);
+  const dialogRef = useRef(null);
   const existing = getNote(surah, ayah);
   const noted = hasNote(surah, ayah);
 
   useEffect(() => {
-    if (open && inputRef.current) {
-      inputRef.current.focus();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open) {
+      dialog.showModal();
+    } else {
+      dialog.close();
     }
   }, [open]);
 
@@ -21,15 +26,14 @@ const NoteButton = memo(({ surah, ayah, text }) => {
     if (noted && !existing?.noteText) {
       removeNoteByRef(surah, ayah);
     } else {
-      setOpen((prev) => !prev);
       if (!open && existing) {
         setInput(existing.noteText || '');
       }
+      setOpen((prev) => !prev);
     }
   }, [noted, existing, open, removeNoteByRef, surah, ayah]);
 
-  const handleSave = useCallback((e) => {
-    e.stopPropagation();
+  const handleSave = useCallback(() => {
     if (input.trim()) {
       addNote(surah, ayah, text, input.trim());
     } else {
@@ -40,16 +44,14 @@ const NoteButton = memo(({ surah, ayah, text }) => {
   }, [input, addNote, removeNoteByRef, surah, ayah, text]);
 
   const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') {
-      handleSave(e);
-    }
-    if (e.key === 'Escape') {
-      setOpen(false);
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSave();
     }
   }, [handleSave]);
 
   return (
-    <div className="relative" onClick={(e) => e.stopPropagation()}>
+    <>
       <button
         onClick={handleToggle}
         className={`p-2 rounded-lg transition-all duration-200 ${
@@ -63,20 +65,19 @@ const NoteButton = memo(({ surah, ayah, text }) => {
         <FaStickyNote size={14} />
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-lg"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="relative w-full max-w-md bg-slate-800 border border-teal-500/20 rounded-xl p-4 shadow-2xl shadow-black/40"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <dialog
+        ref={dialogRef}
+        className="w-full max-w-md rounded-xl border border-teal-500/20 bg-slate-800 p-0 shadow-2xl shadow-black/40 backdrop:bg-black/60 backdrop:backdrop-blur-lg"
+        onClose={() => setOpen(false)}
+        onClick={(e) => { if (e.target === dialogRef.current) setOpen(false); }}
+      >
+        <div className="p-4">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-teal-400 font-medium">ملحوظة</span>
             <button
               onClick={() => setOpen(false)}
               className="p-1 rounded text-slate-500 hover:text-slate-300 transition-colors"
+              type="button"
             >
               <FaTimes size={12} />
             </button>
@@ -101,20 +102,21 @@ const NoteButton = memo(({ surah, ayah, text }) => {
             <button
               onClick={() => setOpen(false)}
               className="px-3 py-1.5 text-xs text-slate-400 hover:text-slate-300 transition-colors"
+              type="button"
             >
               إلغاء
             </button>
             <button
               onClick={handleSave}
               className="px-4 py-1.5 text-xs bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors"
+              type="button"
             >
               حفظ
             </button>
-            </div>
           </div>
         </div>
-      )}
-    </div>
+      </dialog>
+    </>
   );
 });
 
