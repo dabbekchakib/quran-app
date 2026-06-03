@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaStickyNote, FaTrash, FaFilePdf, FaArrowLeft, FaQuran } from 'react-icons/fa';
 import { useNote } from '../context/NotesContext';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import { jsPDF } from 'jspdf';
 
 const Notes = () => {
@@ -10,6 +10,7 @@ const Notes = () => {
   const [surahCache, setSurahCache] = useState({});
   const [exporting, setExporting] = useState(false);
   const contentRef = useRef(null);
+  const notesRef = useRef(null);
 
   useEffect(() => {
     document.title = 'الملحوظات - القرآن الكريم';
@@ -50,7 +51,7 @@ const Notes = () => {
     setExporting(true);
     try {
       await document.fonts.ready;
-      const root = contentRef.current;
+      const root = notesRef.current;
       const canvas = await html2canvas(root, {
         backgroundColor: '#0f172a',
         scale: 2,
@@ -60,66 +61,15 @@ const Notes = () => {
         allowTaint: true,
         removeContainer: true,
         onclone: (clonedDoc) => {
-          const style = clonedDoc.createElement('style');
-          style.textContent = `
-            *, *::before, *::after {
-              color: inherit !important;
-              background: transparent !important;
-              background-color: transparent !important;
-              border-color: inherit !important;
-              outline-color: inherit !important;
-              text-decoration-color: inherit !important;
-              caret-color: inherit !important;
-              accent-color: auto !important;
-              filter: none !important;
-              backdrop-filter: none !important;
-              box-shadow: none !important;
-            }
-            body {
-              background: #0f172a !important;
-              color: #e2e8f0 !important;
-            }
-            [class*="bg-"] {
-              background: #1e293b !important;
-            }
-            [class*="text-slate-100"],
-            [class*="text-slate-200"],
-            [class*="text-slate-300"] {
-              color: #e2e8f0 !important;
-            }
-            [class*="text-slate-400"],
-            [class*="text-slate-500"],
-            [class*="text-slate-600"] {
-              color: #94a3b8 !important;
-            }
-            [class*="text-teal"] {
-              color: #14b8a6 !important;
-            }
-            [class*="text-blue"] {
-              color: #60a5fa !important;
-            }
-            [class*="text-red"] {
-              color: #f87171 !important;
-            }
-            [class*="border-teal"] {
-              border-color: #14b8a6 !important;
-            }
-            [class*="border-slate"] {
-              border-color: #475569 !important;
-            }
-            [class*="border-blue"] {
-              border-color: #3b82f6 !important;
-            }
-            [class*="border-red"] {
-              border-color: #ef4444 !important;
-            }
-            [class*="from-"],
-            [class*="to-"],
-            [class*="via-"] {
-              background: #0f172a !important;
-            }
-          `;
-          clonedDoc.head.appendChild(style);
+          clonedDoc.querySelectorAll('*').forEach((el) => {
+            el.style.filter = 'none';
+            el.style.backdropFilter = 'none';
+            el.style.boxShadow = 'none';
+          });
+          const title = clonedDoc.querySelector('[data-pdf-title]');
+          if (title) title.style.display = 'block';
+          const count = clonedDoc.querySelector('[data-pdf-count]');
+          if (count) count.style.display = 'block';
         },
       });
       const imgData = canvas.toDataURL('image/png');
@@ -200,7 +150,14 @@ const Notes = () => {
           </Link>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div ref={notesRef}>
+          <h1 data-pdf-title className="hidden text-center text-3xl font-bold text-slate-100 font-[Amiri] mb-6">
+            الملحوظات
+          </h1>
+          <p data-pdf-count className="hidden text-center text-slate-400 text-sm mb-8">
+            {notes.length} ملحوظة
+          </p>
+          <div className="space-y-3">
           {sorted.map((note) => (
             <div
               key={note.id}
@@ -248,6 +205,7 @@ const Notes = () => {
               </div>
             </div>
           ))}
+          </div>
         </div>
       )}
       </div>

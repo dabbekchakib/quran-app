@@ -13,7 +13,7 @@
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.1",
     "howler": "^2.2.4",
-    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^2.0.4",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "react": "^19.2.6",
