@@ -14,6 +14,7 @@ const Page = lazy(() => import('../pages/Page'));
 const Bookmarks = lazy(() => import('../pages/Bookmarks'));
 const Downloads = lazy(() => import('../pages/Downloads'));
 const Notes = lazy(() => import('../pages/Notes'));
+const Intelligence = lazy(() => import('../pages/Intelligence'));
 const Settings = lazy(() => import('../pages/Settings'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
@@ -30,6 +31,7 @@ const AppRoutes = () => {
           <Route path="/hizb" element={<HizbList />} />
           <Route path="/hizb/:id" element={<HizbDetail />} />
           <Route path="/page/:id" element={<Page />} />
+          <Route path="/intelligence" element={<Intelligence />} />
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/downloads" element={<Downloads />} />
           <Route path="/notes" element={<Notes />} />

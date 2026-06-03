@@ -68,4 +68,23 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    proxy: {
+      '/api/chat': {
+        target: 'https://openrouter.ai',
+        changeOrigin: true,
+        rewrite: (path) => '/api/v1/chat/completions',
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq, req) => {
+            const apiKey = req.headers['x-api-key'];
+            if (apiKey) {
+              proxyReq.setHeader('Authorization', `Bearer ${apiKey}`);
+            }
+            proxyReq.setHeader('HTTP-Referer', 'https://quran-app.example.com');
+            proxyReq.setHeader('X-Title', 'Quran App');
+          });
+        },
+      },
+    },
+  },
 })
