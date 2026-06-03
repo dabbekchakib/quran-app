@@ -65,9 +65,14 @@ const NoteButton = memo(({ surah, ayah, text }) => {
 
       {open && (
         <div
-          className="absolute left-0 top-full mt-2 z-[9999] w-72 max-w-[90vw] bg-slate-800 border border-teal-500/20 rounded-xl p-3 shadow-2xl shadow-black/40 backdrop-blur-xl"
-          onClick={(e) => e.stopPropagation()}
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          onClick={() => setOpen(false)}
         >
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          <div
+            className="relative w-full max-w-md bg-slate-800 border border-teal-500/20 rounded-xl p-4 shadow-2xl shadow-black/40"
+            onClick={(e) => e.stopPropagation()}
+          >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-teal-400 font-medium">ملحوظة</span>
             <button
