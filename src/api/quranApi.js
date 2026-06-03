@@ -76,6 +76,6 @@ export const fetchFullHizb = async (hizbNumber, edition = 'ar.alafasy') => {
 };
 
 export const fetchPageById = async (pageNumber) => {
-  const response = await api.get(`/page/${pageNumber}/quran-uthmani`);
+  const response = await api.get(`/page/${pageNumber}/ar.alafasy`);
   return response.data.data;
 };
